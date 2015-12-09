@@ -1,0 +1,118 @@
+            // }
+               // echo '<p>Tel:&nbsp; '.$strNum.'<br/>';
+               
+                echo '<p>Tel: &nbsp'.$StrFullTelNo.'<br/>';
+                
+                //$strFirst2 = substr($RstObj["Fax_AreaCode"]." ".$RstObj["Fax_AreaCode"],0,2);
+                //$strRemainder = substr($RstObj["Fax_AreaCode"]." ".$RstObj["Fax_AreaCode"],2);
+                //$StrFullFaxNo = $RstObj["Tel_AreaCode"] . " " .$RstObj['Tel_Number'];
+                
+                // 20150819 MS - removed rules as the phone number was displaying poorly
+                // $strNum = "";
+                // switch ($strFirst2){
+                // case "00":
+                //     $strNum = "+" .trim($strRemainder);
+                //     break;
+                // case "01":
+                //     if ($strRegion == "UK" || $strRegion=="IR") {
+                //         $strNum = "+44 (0)2".$strRemainder;
+                //     }
+                //     break;
+                // default:
+                //     $strNum = $RstObj['Fax_Number'];
+                //     break;
+                // }
+                //echo 'Fax:  &nbsp; '.$strNum;
+               
+                $StrFullFaxNo = $RstObj["Fax_AreaCode"] . " " .$RstObj['Fax_Number'];
+                echo 'Fax: &nbsp'.$StrFullFaxNo.'<br/>';
+
+                if ($ident != "159793") {
+                    //Hide email address for Fernando Broner until script written to output emails differently
+                    echo '<br/>Email: &nbsp; <A HREF=\'mailto:"'.$RstObj['Email_Address']. '"\'>'.strtolower($RstObj['Email_Address']). '</a></p>';
+                }
+                  
+                $strURL = "";
+                $strURLSQL = "SELECT * FROM tblContactsWebSites WHERE tblContactsWebSites.IDENT = ".$ident;
+                $url_res = db_query($strURLSQL);  
+                $url = db_fetch_assoc($url_res);
+                
+                
+                $strURL =  $url['URL'];
+                if ($strURL != '') {
+                    if (strpos($strURL,'http://') === false) {
+                        $strURL = "http://".$strURL;
+                    }
+                    echo  "<p>Home Page URL: &nbsp; <a href='".$strURL."' TARGET='_NEW'>".$strURL."</a></p>";
+                } else {
+                    echo  '<p>Home Page URL: &nbsp; Not Supplied </p>';
+                }
+                
+                echo '<h2>Programme Area(s)</h2>';
+
+								echo "<ul>";
+                $count = 0;
+                while ($prog = db_fetch_assoc($prog_areas)) {
+                    if ($count > 0) {
+                        //echo ', ';
+                    }
+                    echo '<li>' . $prog['ProgAreaLong']. ' ('.$prog['ProgAreaShort'].') - '.$prog['Status'].'</li>';
+                    $count++;
+                }
+								echo "</ul>";
+                
+                /*<% If Not rstInit.EOF Then %>                
+                <P><B>Initiative(s)</B>:
+
+                <% Do Until RstInit.EOF
+                    %><%=RstInit("IntShort") & " (" & RstInit("Status") & ")" %> <%
+                    RstInit.MoveNext
+                    if Not RstInit.EOF Then
+                        Response.Write ", "
+                    End if
+                Loop %>
+                <% End if %>*/
+								
+								echo '</p>';
+                    
+                echo '<p>The last update to this information was on ';
+                if ($RstObj['DateUpdated'] == '') {
+                    echo $RstObj['DateEntered'].'';
+                } else {
+                    echo $RstObj['DateUpdated'].'';
+                }
+                echo '<hr/>';
+                echo '<p><a href="/content/staff">Questions and comments</a> are always welcome.
+                <p>Please read our <a href="/content/disclaimer">disclaimer</a> regarding links from this web site.</p>';
+                
+            }
+        }
+    }
+                
+?>
+
+
+
+</div> <!-- End Main Content -->
+										
+										</section> <!-- /#main -->
+
+
+    <aside id="sidebar-second" role="complementary" class="sidebar clearfix">
+      <div class="region region-sidebar-second">
+			
+										
+<?php
+    if ($intNoDetails != 1) {
+        if (db_num_rows($contact_dets) > 0) {
+            echo '<P><BR><BR>
+            <A HREF=\'/active/publications/discussion_papers/authorlist.php?ident='.$ident.'\'>Discussion Papers</A> by '.
+            $RstObj['Forename'].' '.$RstObj['Surname'].
+            '</p><p>
+            <A HREF=\'/active/publications/books_reports/authorlist.php?ident='.$ident.'\'>Books & Reports</A> by '.
+            $RstObj['Forename'].' '.$RstObj['Surname'].
+            '</p';
+        }
+    }
+	
+?>
